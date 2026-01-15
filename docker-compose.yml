@@ -2,10 +2,9 @@ services:
   app:
     build: ./app
     ports:
-      - "3000:3000"
-    environment:
-      PORT: 3000
-      REDIS_URL: redis://redis:6379
+      - "${APP_PORT}:3000"
+    env_file:
+      - .env
     depends_on:
       redis:
         condition: service_started
@@ -13,7 +12,12 @@ services:
 
   redis:
     image: redis:7-alpine
-    command: ["redis-server", "--appendonly", "yes"]
+    command: >
+      redis-server
+      --appendonly yes
+      --requirepass ${REDIS_PASSWORD}
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
     volumes:
       - redis-data:/data
     restart: unless-stopped

@@ -4,8 +4,17 @@ const { createClient } = require("redis");
 const app = express();
 app.use(express.json());
 
-const PORT = process.env.PORT || 3000;
-const REDIS_URL = process.env.REDIS_URL || "redis://redis:6379";
+const PORT = process.env.APP_PORT || 3000;
+
+
+const REDIS_HOST = process.env.REDIS_HOST || "redis";
+const REDIS_PORT = process.env.REDIS_PORT || 6379;
+const REDIS_PASSWORD = process.env.REDIS_PASSWORD;
+
+const REDIS_URL = REDIS_PASSWORD
+  ? `redis://:${REDIS_PASSWORD}@${REDIS_HOST}:${REDIS_PORT}`
+  : `redis://${REDIS_HOST}:${REDIS_PORT}`;
+
 
 let redisClient;
 
